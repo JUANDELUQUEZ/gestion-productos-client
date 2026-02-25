@@ -5,17 +5,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Registro from './pages/Registro'; // IMPORTAMOS EL NUEVO COMPONENTE
 import DashboardGuest from './pages/DashboardGuest';
 import DashboardAdmin from './pages/DashboardAdmin';
 
-// Subcomponente de Navegación para usar los hooks de React Router
 const Navbar = () => {
     const { token, rol, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
-        navigate('/'); // Lo devolvemos al home tras cerrar sesión
+        navigate('/'); 
     };
 
     return (
@@ -25,9 +25,15 @@ const Navbar = () => {
             </div>
             <div>
                 {!token ? (
-                    <Link to="/login" style={{ color: 'white', textDecoration: 'none', padding: '10px 20px', background: '#3498db', borderRadius: '5px', fontWeight: 'bold' }}>
-                        Iniciar Sesión
-                    </Link>
+                    <>
+                        <Link to="/login" style={{ color: 'white', textDecoration: 'none', padding: '10px 20px', background: '#3498db', borderRadius: '5px', fontWeight: 'bold', marginRight: '10px' }}>
+                            Iniciar Sesión
+                        </Link>
+                        {/* NUEVO BOTÓN DE REGISTRO */}
+                        <Link to="/registro" style={{ color: 'white', textDecoration: 'none', padding: '10px 20px', background: '#27ae60', borderRadius: '5px', fontWeight: 'bold' }}>
+                            Registrarse
+                        </Link>
+                    </>
                 ) : (
                     <>
                         <span style={{ marginRight: '20px', fontStyle: 'italic' }}>Rol: {rol}</span>
@@ -53,16 +59,18 @@ function App() {
         <Navbar />
         <div style={{ padding: '0 30px' }}>
             <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            
-            <Route element={<ProtectedRoute />}>
-                <Route path="/guest" element={<DashboardGuest />} />
-            </Route>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                {/* NUEVA RUTA DE REGISTRO */}
+                <Route path="/registro" element={<Registro />} />
+                
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/guest" element={<DashboardGuest />} />
+                </Route>
 
-            <Route element={<ProtectedRoute rolRequerido="admin" />}>
-                <Route path="/admin" element={<DashboardAdmin />} />
-            </Route>
+                <Route element={<ProtectedRoute rolRequerido="admin" />}>
+                    <Route path="/admin" element={<DashboardAdmin />} />
+                </Route>
             </Routes>
         </div>
       </BrowserRouter>
